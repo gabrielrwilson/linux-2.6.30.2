@@ -489,10 +489,6 @@ static struct spi_board_info ek_spi_devices[] = {
 		.bus_num	= 0,
 		.mode = SPI_MODE_0,
 	},
-// Removed to allow mission-specific loadable modules the option of controlling
-//  This device.  E.g., either as spi-dev or some mtd driver that can be mounted
-//  with a filesystem.
-#if 0
 	{	// Numonyx PCM chip secondary, mtd7 
 		// .modalias	= "mtd_dataflash",
 		.modalias	= "spidev",
@@ -502,7 +498,6 @@ static struct spi_board_info ek_spi_devices[] = {
 		.bus_num	= 0,
 		.mode = SPI_MODE_0,
 	},
-#endif
 	/*
 #if defined(CONFIG_MTD_AT91_DATAFLASH_CARD)
 	{	DataFlash card 
