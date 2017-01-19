@@ -27,9 +27,17 @@
 #define DS3234_REG_MONTH	0x05
 #define DS3234_REG_YEAR		0x06
 #define DS3234_REG_CENTURY	(1 << 7) /* Bit 7 of the Month register */
+#define DS3234_REG_A1M1		0x07
+#define DS3234_REG_A1M2		0x08
+#define DS3234_REG_A1M3		0x09
+#define DS3234_REG_A1M4		0x0A
 
 #define DS3234_REG_CONTROL	0x0E
 #define DS3234_REG_CONT_STAT	0x0F
+
+#define DS3234_CTRL_A1IE	0x01
+#define DS3234_CTRL_A2IE	0x02
+#define DS3234_CTRL_INTCN	0x04
 
 static int ds3234_set_reg(struct device *dev, unsigned char address,
 				unsigned char data)
@@ -119,6 +127,12 @@ static int __devinit ds3234_probe(struct spi_device *spi)
 	if (res != 0)
 		return res;
 
+        /* Configure alarm 1 to interrupt every second */
+	ds3234_set_reg(&spi->dev, DS3234_REG_A1M1, 0);
+	ds3234_set_reg(&spi->dev, DS3234_REG_A1M2, 0);
+	ds3234_set_reg(&spi->dev, DS3234_REG_A1M3, 0);
+	ds3234_set_reg(&spi->dev, DS3234_REG_A1M4, 0);
+
 	/* Control settings
 	 *
 	 * CONTROL_REG
@@ -134,7 +148,7 @@ static int __devinit ds3234_probe(struct spi_device *spi)
 	 *     1	0	0	0	1	0	0	0
 	 */
 	ds3234_get_reg(&spi->dev, DS3234_REG_CONTROL, &tmp);
-	ds3234_set_reg(&spi->dev, DS3234_REG_CONTROL, tmp & 0x1c);
+	ds3234_set_reg(&spi->dev, DS3234_REG_CONTROL, (tmp & 0x1c) | DS3234_CTRL_A1IE | DS3234_CTRL_INTCN);
 
 	ds3234_get_reg(&spi->dev, DS3234_REG_CONT_STAT, &tmp);
 	ds3234_set_reg(&spi->dev, DS3234_REG_CONT_STAT, tmp & 0x88);
@@ -145,6 +159,7 @@ static int __devinit ds3234_probe(struct spi_device *spi)
 
 	ds3234_get_reg(&spi->dev, DS3234_REG_CONT_STAT, &tmp);
 	dev_info(&spi->dev, "Ctrl/Stat Reg: 0x%02x\n", tmp);
+
 
 	rtc = rtc_device_register("ds3234",
 				&spi->dev, &ds3234_rtc_ops, THIS_MODULE);
