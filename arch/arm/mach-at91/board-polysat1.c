@@ -106,7 +106,8 @@ static struct at91_usbh_data __initdata ek_usbh_data = {
  * USB Device port
  */
 static struct at91_udc_data __initdata ek_udc_data = {
-	.vbus_pin	= AT91_PIN_PC5,
+	// .vbus_pin	= AT91_PIN_PC5,
+	.vbus_pin	= 0,   // Flight board lacks vbus sense input
 	.pullup_pin	= 0,		/* pull-up driven by UDC */
 };
 
