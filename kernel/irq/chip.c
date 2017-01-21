@@ -522,6 +522,7 @@ handle_edge_irq(unsigned int irq, struct irq_desc *desc)
 out_unlock:
 	spin_unlock(&desc->lock);
 }
+EXPORT_SYMBOL_GPL(handle_edge_irq);
 
 /**
  *	handle_percpu_IRQ - Per CPU local irq handler
