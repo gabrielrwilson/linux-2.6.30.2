@@ -352,6 +352,9 @@ static struct {
    int dbaRegToggleGPIO, regRdyIRQ, txRxToggleGPIO;
 } plat_data_axsem = { AT91_PIN_PC8, AT91_PIN_PC10, AT91_PIN_PB19 };
 
+static struct {
+   unsigned base;
+} plat_data_xra1405 = { 160 };
 
 /*
  * SPI devices.
@@ -373,6 +376,16 @@ static struct spi_board_info ek_spi_devices[] = {
 		.bus_num	= 1,
 		.mode = SPI_MODE_3,
 	},
+	{	// XRA Interrput Controller
+		.modalias	= "xra1405",
+		.chip_select	= 2,
+                .platform_data = &plat_data_xra1405,
+                .controller_data = &spi1_cs2_data,
+		.max_speed_hz	= 12 * 1000 * 1000,
+		.bus_num	= 1,
+                .irq = 29, // Handled w/physical IRQ line, IRQ0
+	},
+#if 0
 	{	//default device 1.2 
 		.modalias	= "spidev",
 		.chip_select	= 2,
@@ -380,6 +393,7 @@ static struct spi_board_info ek_spi_devices[] = {
 		.max_speed_hz	= 2 * 1000 * 1000,
 		.bus_num	= 1,
 	},
+#endif
 	{	//default device 1.3 
 		.modalias	= "spidev",
 		.chip_select	= 3,
