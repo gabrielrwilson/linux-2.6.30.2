@@ -176,4 +176,11 @@ config GPIO_MCP23S08
 	  SPI driver for Microchip MCP23S08 I/O expander.  This provides
 	  a GPIO interface supporting inputs and outputs.
 
+config GPIO_XRA1405
+	tristate "Exar XRA1405 GPIO expander"
+	depends on SPI_MASTER
+	help
+	  gpio and interrupt expander driver for Exar XRA1405 SPI GPIO expander.
+
+
 endif

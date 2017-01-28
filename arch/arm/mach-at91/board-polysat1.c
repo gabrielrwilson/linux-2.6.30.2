@@ -28,6 +28,7 @@
 #include <linux/clk.h>
 #include <linux/i2c/at24.h>
 #include <linux/i2c/pca953x.h>
+#include <linux/spi/xra1405.h>
 
 #include <mach/hardware.h>
 #include <asm/setup.h>
@@ -353,10 +354,7 @@ static struct {
 } plat_data_axsem = { AT91_PIN_PC8, AT91_PIN_PC10, AT91_PIN_PB19 };
 
 static struct timeval xra_shared_irq_time;
-static struct {
-   unsigned base;
-   struct timeval *shared_irq_time;
-} plat_data_xra1405 = { 160, &xra_shared_irq_time };
+static struct xra1405_platform_data plat_data_xra1405 = { 160, &xra_shared_irq_time };
 
 static struct DS3234PlatData {
    unsigned irq;
