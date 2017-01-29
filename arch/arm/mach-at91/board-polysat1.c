@@ -45,6 +45,7 @@
 #include <linux/gpio_keys.h>
 #include <linux/input.h>
 #include <mach/at91sam9_smc.h>
+#include <linux/rtc/ds3234.h>
 
 #include "sam9_smc.h"
 #include "generic.h"
@@ -355,11 +356,7 @@ static struct {
 
 static struct timeval xra_shared_irq_time;
 static struct xra1405_platform_data plat_data_xra1405 = { 160, &xra_shared_irq_time };
-
-static struct DS3234PlatData {
-   unsigned irq;
-   struct timeval *shared_irq_time;
-} plat_data_ds3234 = { 168, &xra_shared_irq_time };
+static struct DS3234PlatData plat_data_ds3234 = { 168, &xra_shared_irq_time };
 
 /*
  * SPI devices.
@@ -679,6 +676,7 @@ static struct gpio_led ek_leds[] = {
 	}
 }; */
 
+#if 0
 /*
  * GPIO Buttons
  */
@@ -705,7 +703,6 @@ static struct gpio_keys_platform_data ek_button_data = {
 	.nbuttons	= ARRAY_SIZE(ek_buttons),
 };
 
-#if 0
 static struct platform_device ek_button_device = {
 	.name		= "gpio-keys",
 	.id		= -1,
