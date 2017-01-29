@@ -772,7 +772,7 @@ fail:
 
 }
 
-static int xra1405_probe(struct spi_device *spi)
+static int __devinit xra1405_probe(struct spi_device *spi)
 {
     struct xra1405_platform_data    *pdata;
     struct xra1405      *xra;
@@ -821,7 +821,7 @@ fail:
     return status;
 }
 
-static int xra1405_remove(struct spi_device *spi)
+static int __devexit xra1405_remove(struct spi_device *spi)
 {
     struct xra1405 *xra = spi_get_drvdata(spi);
     int status;
@@ -838,7 +838,7 @@ static int xra1405_remove(struct spi_device *spi)
 
 static struct spi_driver xra1405_driver = {
     .probe    = xra1405_probe,
-    .remove   = xra1405_remove,
+    .remove   = __devexit_p(xra1405_remove),
     .driver   = {
         .name           = XRA1405_MODULE_NAME,
         .owner          = THIS_MODULE,
@@ -854,14 +854,12 @@ static int __init xra1405_init (void)
 {
     return spi_register_driver(&xra1405_driver);
 }
-
-subsys_initcall(xra1405_init);
+module_init(xra1405_init);
 
 static void __exit xra1405_exit (void)
 {
     xra1405_spi_exit();
 }
-
 module_exit(xra1405_exit);
 
 MODULE_ALIAS(MAKE_ALIAS("platform:", XRA1405_MODULE_NAME));

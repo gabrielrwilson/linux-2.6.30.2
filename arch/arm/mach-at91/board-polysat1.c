@@ -364,25 +364,17 @@ static struct DS3234PlatData {
 /*
  * SPI devices.
  */
-static struct spi_board_info ek_spi_devices_r0[] = {
-	{	//default device 1.0 
+
+static struct spi_board_info r9_rtc_spidev = {
 		.modalias	= "ds3234",
 		.chip_select	= 8,
       .controller_data = &spi1_cs8_data,
-		.max_speed_hz	= 3 * 1000 * 1000, 
+                .platform_data = &plat_data_ds3234,
+		.max_speed_hz	= 1 * 1000 * 1000, 
 		.bus_num	= 1,
-	},
-	{	//default device 1.2 
-		.modalias	= "spidev",
-		.chip_select	= 2,
-      .controller_data = &spi1_cs2_data,
-		.max_speed_hz	= 2 * 1000 * 1000,
-		.bus_num	= 1,
-	},
 };
 
-static struct spi_board_info ek_spi_devices_r9[] = {
-	{	// XRA Interrput Controller
+static struct spi_board_info r9_xra_spidev = {
 		.modalias	= "xra1405",
 		.chip_select	= 2,
                 .platform_data = &plat_data_xra1405,
@@ -390,18 +382,12 @@ static struct spi_board_info ek_spi_devices_r9[] = {
 		.max_speed_hz	= 16 * 1000 * 1000,
 		.bus_num	= 1,
                 .irq = 29, // Handled w/physical IRQ line, IRQ0
-	},
-	{	//default device 1.0 
-		.modalias	= "ds3234",
-		.chip_select	= 8,
-      .controller_data = &spi1_cs8_data,
-                .platform_data = &plat_data_ds3234,
-		.max_speed_hz	= 3 * 1000 * 1000, 
-		.bus_num	= 1,
-	},
 };
 
-static struct spi_board_info ek_spi_devices_common[] = {
+#define SPI0_2_IDX 2
+#define SPI0_8_IDX 8
+
+static struct spi_board_info ek_spi_devices[] = {
 	{	//default device 1.0 
 		.modalias	= "spidev",
 		.chip_select	= 0,
@@ -418,7 +404,13 @@ static struct spi_board_info ek_spi_devices_common[] = {
 		.bus_num	= 1,
 		.mode = SPI_MODE_3,
 	},
-        // SPI 1.2 is revision specific
+	{	//default device 1.2 
+		.modalias	= "spidev",
+		.chip_select	= 2,
+      .controller_data = &spi1_cs2_data,
+		.max_speed_hz	= 2 * 1000 * 1000,
+		.bus_num	= 1,
+	},
 	{	//default device 1.3 
 		.modalias	= "spidev",
 		.chip_select	= 3,
@@ -456,7 +448,13 @@ static struct spi_board_info ek_spi_devices_common[] = {
 		.bus_num	= 1,
       .irq = 30, // Handled w/physical IRQ line
 	},
-        // SPI 0.8 is revision specific
+	{	//default device 1.0 
+		.modalias	= "ds3234",
+		.chip_select	= 8,
+      .controller_data = &spi1_cs8_data,
+		.max_speed_hz	= 1 * 1000 * 1000, 
+		.bus_num	= 1,
+	},
 	{	//default device 1.0 
 		.modalias	= "spidev",
 		.chip_select	= 9,
@@ -707,6 +705,7 @@ static struct gpio_keys_platform_data ek_button_data = {
 	.nbuttons	= ARRAY_SIZE(ek_buttons),
 };
 
+#if 0
 static struct platform_device ek_button_device = {
 	.name		= "gpio-keys",
 	.id		= -1,
@@ -715,6 +714,7 @@ static struct platform_device ek_button_device = {
 		.platform_data	= &ek_button_data,
 	}
 };
+#endif
 
 #if 0
 static void __init ek_add_device_buttons(void)
@@ -901,11 +901,12 @@ static void __init ek_board_init(void)
    }
 
 	/* SPI */
-   at91_add_device_spi(ek_spi_devices_common, ARRAY_SIZE(ek_spi_devices_common));
-   if (BOARD_REV_NUM >= 9)
-	at91_add_device_spi(ek_spi_devices_r9, ARRAY_SIZE(ek_spi_devices_r9));
-   else
-	at91_add_device_spi(ek_spi_devices_r0, ARRAY_SIZE(ek_spi_devices_r0));
+   if (BOARD_REV_NUM >= 9) {
+      ek_spi_devices[SPI0_2_IDX] = r9_xra_spidev;
+      ek_spi_devices[SPI0_8_IDX] = r9_rtc_spidev;
+   }
+
+   at91_add_device_spi(ek_spi_devices, ARRAY_SIZE(ek_spi_devices));
 
    // No LEDs or Push buttons needed for PolySat
 	/* LEDs */
