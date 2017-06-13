@@ -373,7 +373,7 @@ static struct spi_board_info r9_rtc_spidev = {
 
 static struct spi_board_info r9_xra_spidev = {
 		.modalias	= "xra1405",
-		.chip_select	= 2,
+		.chip_select	= 3,
                 .platform_data = &plat_data_xra1405,
                 .controller_data = &spi1_cs2_data,
 		.max_speed_hz	= 16 * 1000 * 1000,
@@ -381,7 +381,7 @@ static struct spi_board_info r9_xra_spidev = {
                 .irq = 29, // Handled w/physical IRQ line, IRQ0
 };
 
-#define SPI0_2_IDX 2
+#define SPI0_3_IDX 3
 #define SPI0_8_IDX 8
 
 static struct spi_board_info ek_spi_devices[] = {
@@ -899,7 +899,7 @@ static void __init ek_board_init(void)
 
 	/* SPI */
    if (BOARD_REV_NUM >= 9) {
-      ek_spi_devices[SPI0_2_IDX] = r9_xra_spidev;
+      ek_spi_devices[SPI0_3_IDX] = r9_xra_spidev;
       ek_spi_devices[SPI0_8_IDX] = r9_rtc_spidev;
    }
 
