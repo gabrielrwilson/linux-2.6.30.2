@@ -1052,7 +1052,9 @@ static void __init ek_board_init(void)
    #endif
 
    // Set GPIO pins into GPIO and known state.
+   at91_set_gpio_output(AT91_PIN_PA28, 0);
    at91_set_gpio_output(AT91_PIN_PA29, 0);
+   at91_set_gpio_output(AT91_PIN_PA30, 0);
    at91_set_gpio_output(AT91_PIN_PB16, 0);
    at91_set_gpio_output(AT91_PIN_PC6, 1);
    at91_set_gpio_output(AT91_PIN_PC7, 0);
